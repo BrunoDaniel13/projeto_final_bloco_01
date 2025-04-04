@@ -2,11 +2,23 @@ package biblioteca;
 
 import java.util.Scanner;
 
+import biblioteca.model.ContaPremium;
+import biblioteca.model.Conta;
+import biblioteca.model.ContaNormal;
+import biblioteca.model.Livros;
+
 public class Menu {
 		
 	    public static void main(String[] args) {
 	    		    	
 	    	Scanner ler = new Scanner(System.in);
+	    	  	
+	    	// teste de conta premium
+	    	ContaPremium contaPremium = new ContaPremium(1, "pedro", "Pedro@gmail.com", "0009-9988", 1, true,"");
+	    	contaPremium.visualizar();
+	    	//teste emprestimo de livros
+	    	ContaNormal contaNormal1 = new ContaNormal(2,"Joao", "luiz@gmail.com","4002-8922",2, true);
+	    	contaNormal1.visualizar();
 	    	
 	    	int opcao;
 	    	
@@ -45,7 +57,7 @@ public class Menu {
 				switch (opcao) {
 					case 1:
 						System.out.println("\nCriar Conta\n\n");
-						
+				
 	                    		break;
 					case 2:
 						System.out.println("\nBuscar livros disponíveis\n\n");
