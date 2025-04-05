@@ -1,6 +1,7 @@
 package biblioteca.repository;
 
 import biblioteca.model.Conta;
+import biblioteca.model.Livros;
 
 public interface BibliotecaRepository {
 
@@ -11,7 +12,7 @@ public interface BibliotecaRepository {
 	public void deletar(int numero);
 	
 	//Métodos 
-	public void cadastrarLivros(int numero, int tipo);
-	public void emprestar(int numero, int tipo);
-	public void buscarLivros(String List);
+	public void cadastrarLivro(int usuario, Livros livro);
+	public void emprestarLivro(int usuario, Livros livro);
+	public void buscarLivros();
 }

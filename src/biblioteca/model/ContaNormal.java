@@ -5,21 +5,12 @@ import java.util.List;
 
 public class ContaNormal extends Conta{
 	
-	private boolean basica;
+	
 	private List<Livros> livrosEmprestados; 
 	
-	public ContaNormal(int usuario, String nome, String email, String telefone, int tipo, boolean basica) {
+	public ContaNormal(int usuario, String nome, String email, String telefone, int tipo) {
 		super(usuario, nome, email, telefone, tipo);
-		this.basica = basica;
 		this.livrosEmprestados = new ArrayList<>();
-	}
-
-	public boolean isBasica() {
-		return basica;
-	}
-
-	public void setBasica(boolean basica) {
-		this.basica = basica;
 	}
 
 	public void emprestarLivro(Livros livro) {
@@ -31,14 +22,9 @@ public class ContaNormal extends Conta{
         }
     }
 	
-	
 	public void visualizar() {
 		super.visualizar();
-		System.out.println("Conta Básica: " + this.basica);
-        System.out.println("Livros emprestados: ");
-        for (Livros livro : livrosEmprestados) {
-            System.out.println(livro.getTitulo());
-	}
-
-}
+		System.out.println("Livros Emprestados (" + livrosEmprestados.size() + "):");
+        livrosEmprestados.forEach(livro -> livro.visualizar());
+    }
 }

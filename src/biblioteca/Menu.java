@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 import biblioteca.model.ContaPremium;
 import biblioteca.controller.BibliotecaController;
+import biblioteca.model.Conta;
 import biblioteca.model.ContaNormal;
 import biblioteca.model.Livros;
 
@@ -18,11 +19,9 @@ public class Menu {
 	    	BibliotecaController conta = new BibliotecaController();
 	    	
 	    	Scanner ler = new Scanner(System.in);
-	    	String nome, email, telefone, livrosCadastrados, livrosEmprestados;
-	    	String titulo;
-	    	int opcao, tipo, usuario=0;
-	    	boolean premium = true, normal = true;
-	    	
+	    	int opcao, usuario, tipo=0, valor=0;
+	        String nome, email, telefone, titulo, autor, editora;
+	        
 			while(true) {
 
 				System.out.println("*****************************************************");
@@ -35,13 +34,12 @@ public class Menu {
 				System.out.println("                                                     ");
 				System.out.println("            1 - Criar Conta na biblioteca            ");
 				System.out.println("            2 - Buscar livros disponíveis            ");
-				System.out.println("            3 - Remover livro da biblioteca          ");
-				System.out.println("            4 - Atualizar Dados da Conta             ");
-				System.out.println("            5 - Apagar Conta                         ");
-				System.out.println("            6 - Realizar empréstimo de livro         ");
-				System.out.println("            7 - Adicionar livro a biblioteca         ");
-				System.out.println("            8 - Procurar dados de conta por usuário  ");
-				System.out.println("            9 - Sair                                 ");
+				System.out.println("            3 - Atualizar Dados da Conta             ");
+				System.out.println("            4 - Apagar Conta                         ");
+				System.out.println("            5 - Realizar empréstimo de livro         ");
+				System.out.println("            6 - Adicionar livro a biblioteca         ");
+				System.out.println("            7 - Procurar dados de conta por usuário  ");
+				System.out.println("            8 - Sair                                 ");
 				System.out.println("                                                     ");
 				System.out.println("*****************************************************");
 				System.out.println("Entre com a opção desejada:                          ");
@@ -55,7 +53,7 @@ public class Menu {
 				}
 				
 					
-				if (opcao == 9) {
+				if (opcao == 8) {
 					System.out.println("\nObrigado pela preferência! Volte Sempre! ");
 					sobre();
 					ler.close();
@@ -82,11 +80,11 @@ public class Menu {
 						switch(tipo) {
 						case 1 -> {
 							System.out.println("Carregando....");
-							conta.cadastrar(new ContaPremium(conta.gerarNumero(), nome, email, telefone, tipo, premium, ""));
+							conta.cadastrar(new ContaPremium(conta.gerarNumero(), nome, email, telefone, tipo));
 						}
 						case 2 -> {
 							System.out.println("Carregando...");
-							conta.cadastrar(new ContaNormal(conta.gerarNumero(), nome, email, telefone, tipo, normal));
+							conta.cadastrar(new ContaNormal(conta.gerarNumero(), nome, email, telefone,tipo));
 						}
 						}					
 								keyPress();
@@ -94,54 +92,36 @@ public class Menu {
 					
 					case 2:
 						System.out.println("\nBuscar livros disponíveis\n\n");
-								
+						System.out.println("Carregando...");
+						conta.buscarLivros();
 	                    		break;
 					
 					case 3:
-						System.out.println("\nRemover livro da biblioteca\n\n");
-					
-	                    		break;
-					
-					case 4:
 						System.out.println("\nAtualizar dados da Conta\n\n");
-						System.out.println("Digite o número de usuário da conta: ");
-						usuario=ler.nextInt();
-						
-						var buscaConta = conta.buscarNaCollection(usuario);
-						
-						if(buscaConta != null ) {
-							tipo = buscaConta.getTipo();
-							
-							System.out.println("Digite o seu nome: ");
-							ler.skip("\\R");
-							nome=ler.nextLine();
-							System.out.println("Digite o seu email: ");
-							email=ler.nextLine();
-							System.out.println("Digite o seu telefone: ");
-							telefone=ler.nextLine();
-							
-							switch(tipo) {
-							case 1 -> {
-								System.out.println("Digite o livro cadastrado: ");
-								livrosCadastrados=ler.nextLine();
-								conta.atualizar(new ContaPremium(usuario, nome, email, telefone, tipo, true, livrosCadastrados));
-							}
-							case 2 -> {
-								System.out.println("Digite o livro que pegou emprestado: ");
-								livrosEmprestados=ler.nextLine();
-								conta.atualizar(new ContaNormal(usuario, nome, email, telefone, tipo, true));
-							}
-							default -> {
-								System.out.println("Tipo de conta inválido!");
-							}
-						}
-					}else {
-						System.out.println("A conta não foi encontrada.");
-					}
+						 System.out.print("Número do Usuário: ");
+		                    usuario = ler.nextInt();
+		                    ler.nextLine();
+		                    System.out.print("Novo Nome: ");
+		                    nome = ler.nextLine();
+		                    System.out.print("Novo Email: ");
+		                    email = ler.nextLine();
+		                    System.out.print("Novo Telefone: ");
+		                    telefone = ler.nextLine();
+
+		                    Conta contaAtualizada = conta.buscarNaCollection(usuario);
+		                    if (contaAtualizada != null) {
+		                        contaAtualizada.setNome(nome);
+		                        contaAtualizada.setEmail(email);
+		                        contaAtualizada.setTelefone(telefone);
+		                        conta.atualizar(contaAtualizada);
+		                    } else {
+		                        System.out.println("Usuário não encontrado!");
+		                    }
+
 								keyPress();
 	                    		break;
 				
-					case 5:
+					case 4:
 						System.out.println("\nApagar a Conta\n\n");
 						System.out.println("Digite o número de usuário da conta: ");
 						usuario=ler.nextInt();
@@ -151,22 +131,53 @@ public class Menu {
 								keyPress();
 	                   	 		break;
 					
-					case 6:
+					case 5:
 						System.out.println("\nRealizar empréstimo de livro\n\n");
+						System.out.println("Digite o número de usuário da conta: ");
+						usuario=ler.nextInt();
 						
+						if(tipo == 2) {
+						do {
+							System.out.println("Digite o nome do livro: ");
+							ler.skip("\\R");
+							titulo=ler.nextLine();
+							++ valor;
+						}while( valor <= 0);
 						
+						Livros livroEmprestimo = new Livros(titulo, "", "");
+						
+						conta.emprestarLivro(usuario, livroEmprestimo);	}					
+						
+						else
+							System.out.println("Este tipo de conta não realiza empréstimos.");
+								keyPress();						
 	                   	 		break;
 					
-					case 7:
+					case 6:
 						System.out.println("\nAdicionar livro a biblioteca\n\n");
 						System.out.println("Digite o número de usuário da conta: ");
 						usuario=ler.nextInt();
 						
-							
-	                
+						if(tipo == 1) {
+						do {
+							System.out.println("Digite o nome do livro: ");
+							ler.skip("\\R");
+							titulo=ler.nextLine();
+							System.out.println("Digite o nome do autor: ");
+							autor=ler.nextLine();
+							System.out.println("Digite a editora: ");
+							editora=ler.nextLine();
+							++ valor;
+						}while( valor <= 0);
+						
+						conta.cadastrarLivro(usuario, new Livros(titulo, autor, editora));	}					
+						
+						else
+							System.out.println("Este tipo de conta não realiza cadastros.");
+								keyPress();
 								break;
 					
-					case 8:
+					case 7:
 						System.out.println("\nProcurar dados de conta por usuário\n\n");
 						System.out.println("Digite o número de usuário da conta: ");
 						usuario=ler.nextInt();
@@ -204,4 +215,4 @@ public class Menu {
 
 			}
 		}
-	}
+}

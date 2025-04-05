@@ -2,6 +2,8 @@ package biblioteca.controller;
 
 import java.util.ArrayList;
 import biblioteca.model.Conta;
+import biblioteca.model.ContaNormal;
+import biblioteca.model.ContaPremium;
 import biblioteca.model.Livros;
 import biblioteca.repository.BibliotecaRepository;
 
@@ -9,6 +11,7 @@ import biblioteca.repository.BibliotecaRepository;
 public class BibliotecaController implements BibliotecaRepository {
 	
 	private ArrayList<Conta>listaContas = new ArrayList<Conta>();
+	private ArrayList<Livros> listaLivros = new ArrayList<>();
 	int usuario = 0;
 
 	@Override
@@ -54,28 +57,32 @@ public class BibliotecaController implements BibliotecaRepository {
 		
 	}
 
-	
-	public void cadastrarLivros(String titulo,  String autor, String editora) {
-		var conta = buscarNaCollection(usuario);
-		
-		if(conta != null) {
-			if(conta.getTipo()== 1)
-				System.out.println("\nO livro da conta numero: "+usuario+", foi cadastrado com sucesso!");
-			
-		}else
-			System.out.println("\nA conta número "+usuario+ " não foi encontrada.");
-	}
+	@Override
+	public void cadastrarLivro(int usuario, Livros livro) {
+		Conta conta = buscarNaCollection(usuario);
+        if (conta != null && conta.getTipo() == 1) {
+            ((ContaPremium) conta).cadastrarLivro(livro);
+            listaLivros.add(livro);
+        } else {
+            System.out.println("Apenas contas Premium podem cadastrar livros!");
+        }
+    }
        
 
 	@Override
-	public void emprestar(int numero, int tipo) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void emprestarLivro(int usuario, Livros livro) {
+		 Conta conta = buscarNaCollection(usuario);
+	        if (conta != null && conta.getTipo() == 2) {
+	            ((ContaNormal) conta).emprestarLivro(livro);
+	        } else {
+	            System.out.println("Apenas contas Normais podem pegar livros emprestados!");
+	        }
+	    }
 
 	@Override
-	public void buscarLivros(String List) {
-		// TODO Auto-generated method stub
+	public void buscarLivros() {
+		System.out.println("\nLivros Disponíveis:");
+        listaLivros.forEach(Livros::visualizar);
 		
 	}
 	
